@@ -1,0 +1,3 @@
+[submodule "data/TCEECE"]
+	path = data/TCEECE
+	url = git@version.helsinki.fi:ceec/ceec-corpora/TCEECE.git
