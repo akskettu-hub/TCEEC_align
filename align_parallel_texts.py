@@ -1,7 +1,10 @@
 import re
+import json
 import Levenshtein
 import numpy as np
 from nltk.tokenize import word_tokenize, sent_tokenize
+
+from stats import get_stats
 
 
 def align_parallel_texts(source_text: str, target_text: str, use_sent_tokenize=True):
@@ -178,9 +181,11 @@ if __name__ == "__main__":
         b = f.read()
 
     res = align_parallel_texts(a, b, False)
-    for thing in res:
-        print(thing)
-        print()
+
+    stats = get_stats(res[0])
+    print(stats)
+    print(json.dumps(stats, indent=4, ensure_ascii=False))
+
     """
     a = "A university has said it was recently launched new institute could put a Hampshire city at the forefront of the UK space industry. The Southampton Space Institute, which belongs to the University of Southampton, will support government plans to develop Britain's fast-growing space sector, worth £17bn every year. It brings together the expertise of world-renowned research groups and facilities to drive the development of new space technology and conversations around policy and space sustainability. Inaugural director Prof Matt Middleton said the university has taught thousands of students about aircraft and satellite design since 1959."
     b = "A univesity has said 'twas recently launch'd new institute cou'd put a Hampshire city at the forefront of the UK space industry. The Southampton Space Institute, whch belongs to the University of Southampton, will support government plans to develop Britains fast-growing space sector, worth £17bn every year. It brings together the expertise of world-renowned research groups and facilities to drive the development of new space technology and conversations around policy and space sustainability. Inaugural director Prof Matt Middleton sayd the university has taught thousands of students about aircraft and satellite design since 1959."
