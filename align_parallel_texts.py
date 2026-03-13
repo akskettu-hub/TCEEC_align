@@ -4,9 +4,13 @@ import numpy as np
 from nltk.tokenize import word_tokenize, sent_tokenize
 
 
-def align_parallel_texts(source_text: str, target_text: str):
-    src_text_sent_tokenized = sent_tokenize_text(source_text)
-    target_text_sent_tokenized = sent_tokenize_text(target_text)
+def align_parallel_texts(source_text: str, target_text: str, use_sent_tokenize=True):
+    src_text_sent_tokenized = (
+        sent_tokenize_text(source_text) if use_sent_tokenize else [source_text]
+    )
+    target_text_sent_tokenized = (
+        sent_tokenize_text(target_text) if use_sent_tokenize else [target_text]
+    )
 
     print(
         f"n of sents in src and tgt: {len(src_text_sent_tokenized)}, {len(target_text_sent_tokenized)}"
@@ -167,9 +171,21 @@ def align_pairs_of_sents(aligned_sents):
 
 
 if __name__ == "__main__":
+    with open("./data/AR-HAM-00001-00001-00001-00011-n.txt", "r") as f:
+        a = f.read()
+
+    with open("./data/AR-HAM-00001-00001-00001-00011.txt", "r") as f:
+        b = f.read()
+
+    res = align_parallel_texts(a, b, False)
+    for thing in res:
+        print(thing)
+        print()
+    """
     a = "A university has said it was recently launched new institute could put a Hampshire city at the forefront of the UK space industry. The Southampton Space Institute, which belongs to the University of Southampton, will support government plans to develop Britain's fast-growing space sector, worth £17bn every year. It brings together the expertise of world-renowned research groups and facilities to drive the development of new space technology and conversations around policy and space sustainability. Inaugural director Prof Matt Middleton said the university has taught thousands of students about aircraft and satellite design since 1959."
     b = "A univesity has said 'twas recently launch'd new institute cou'd put a Hampshire city at the forefront of the UK space industry. The Southampton Space Institute, whch belongs to the University of Southampton, will support government plans to develop Britains fast-growing space sector, worth £17bn every year. It brings together the expertise of world-renowned research groups and facilities to drive the development of new space technology and conversations around policy and space sustainability. Inaugural director Prof Matt Middleton sayd the university has taught thousands of students about aircraft and satellite design since 1959."
     res = align_parallel_texts(a, b)
     for thing in res:
         print(thing)
         print()
+    """

@@ -89,7 +89,7 @@ if __name__ == "__main__":
     collection_id = get_tei_collection_id(root)
     tei_list = find_TEIs_from_root(root)
     tei_dict = generate_tei_dict(tei_list)
-    flemin2_001 = tei_dict["FLEMIN2_001"]
+    flemin2_001 = tei_dict["FLEMIN2_002"]
 
     tei_texts1 = get_tei_text_by_paragraph(flemin2_001)
     # print(tei_texts1[2])
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     collection_id = get_tei_collection_id(root)
     tei_list = find_TEIs_from_root(root)
     tei_dict = generate_tei_dict(tei_list)
-    flemin2_001 = tei_dict["FLEMIN2_001"]
+    flemin2_001 = tei_dict["FLEMIN2_002"]
 
     tei_texts2 = get_tei_text_by_paragraph(flemin2_001)
     # print(tei_texts2[2])
