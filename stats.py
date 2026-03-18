@@ -1,22 +1,25 @@
-def get_stats(matched_pairs):
-    res = {}
-
-    print(len(matched_pairs))
-
+def get_stats(matched_pairs, stats_dict={}, to_lower=False):
     for pair in matched_pairs:
-        if pair[0] not in res:
-            res[pair[0]] = {"total_count": 0, "variants": {}}
+        a = pair[0]
+        b = pair[1]
+        if to_lower:
+            if a:
+                a = a.lower()
+            if b:
+                b = b.lower()
+        if a not in stats_dict:
+            stats_dict[a] = {"total_count": 0, "variants": {}}
 
-        if pair[0] != pair[1]:
-            if pair[1] not in res[pair[0]]["variants"]:
-                res[pair[0]]["variants"][pair[1]] = {}
-                res[pair[0]]["variants"][pair[1]]["count"] = 0
+        if a != b:
+            if b not in stats_dict[a]["variants"]:
+                stats_dict[a]["variants"][b] = {}
+                stats_dict[a]["variants"][b]["count"] = 0
 
-            res[pair[0]]["variants"][pair[1]]["count"] += 1
+            stats_dict[a]["variants"][b]["count"] += 1
 
-        res[pair[0]]["total_count"] += 1
+        stats_dict[a]["total_count"] += 1
 
-    return res
+    return stats_dict
 
 
 if __name__ == "__main__":

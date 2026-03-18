@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import Levenshtein
@@ -17,6 +18,9 @@ def align_parallel_texts(source_text: str, target_text: str, use_sent_tokenize=T
 
     print(
         f"n of sents in src and tgt: {len(src_text_sent_tokenized)}, {len(target_text_sent_tokenized)}"
+    )
+    print(
+        f"len of sents in src and tgt: {len(src_text_sent_tokenized[0])}, {len(target_text_sent_tokenized[0])}"
     )
 
     a = word_tokenize_from_sent_list(src_text_sent_tokenized)
@@ -173,20 +177,99 @@ def align_pairs_of_sents(aligned_sents):
     return res
 
 
+def process_all_HAM():
+    normo_path = (
+        "./output/HAM_TXT_files_(normalised)_20260213_(tags_and_newline_removed)/"
+    )
+    diplo_path = (
+        "./output/HAM_TXT_files_(diplomatic)_20260213_(tags_and_newline_removed)/"
+    )
+    res_dicts = {}
+    skipped_list = []
+
+    for file in os.listdir(
+        "./output/HAM_TXT_files_(normalised)_20260213_(tags_and_newline_removed)/"
+    ):
+        print(normo_path + file)
+
+        with open(normo_path + file, "r") as f:
+            a = f.read()
+
+        diplo_file = file[:-6] + ".txt"
+
+        with open(diplo_path + diplo_file, "r") as f:
+            b = f.read()
+
+        if len(a) < 10000:
+            res = align_parallel_texts(a, b, False)
+            # print(res)
+            get_stats(res[0], res_dicts, to_lower=True)
+        else:
+            skipped_list.append(file)
+
+    print(f"Files skipped: {len(skipped_list)}")
+    print(skipped_list)
+
+    # print(res_dicts)
+    res_dict_json = json.dumps(res_dicts, indent=4, ensure_ascii=False)
+    with open("./output/test_out.json", "w") as f:
+        f.write(res_dict_json)
+
+
+def process_all_HAM_test():
+    normo_path = (
+        "./output/HAM_TXT_files_(normalised)_20260213_(tags_and_newline_removed)/"
+    )
+    diplo_path = (
+        "./output/HAM_TXT_files_(diplomatic)_20260213_(tags_and_newline_removed)/"
+    )
+    res_dicts = {}
+    skipped_list = []
+
+    for file in os.listdir(
+        "./output/HAM_TXT_files_(normalised)_20260213_(tags_and_newline_removed)/"
+    ):
+        print(normo_path + file)
+
+        with open(normo_path + file, "r") as f:
+            a = f.read()
+
+        diplo_file = file[:-6] + ".txt"
+
+        with open(diplo_path + diplo_file, "r") as f:
+            b = f.read()
+
+        if len(a) < 10000:
+            res = align_parallel_texts(a, b, False)
+            # print(res)
+            get_stats(res[0], res_dicts, to_lower=True)
+        else:
+            skipped_list.append(file)
+
+    print(f"Files skipped: {len(skipped_list)}")
+    print(skipped_list)
+
+    # print(res_dicts)
+    res_dict_json = json.dumps(res_dicts, indent=4, ensure_ascii=False)
+    with open("./output/none_test.json", "w") as f:
+        f.write(res_dict_json)
+
+
 if __name__ == "__main__":
-    with open("./data/AR-HAM-00001-00001-00001-00011-n.txt", "r") as f:
+    process_all_HAM_test()
+    """
+    with open("./data/test/AR-HAM-00001-00001-00001-00011-n.txt", "r") as f:
         a = f.read()
 
-    with open("./data/AR-HAM-00001-00001-00001-00011.txt", "r") as f:
+    with open("./data/test/AR-HAM-00001-00001-00001-00011.txt", "r") as f:
         b = f.read()
 
     res = align_parallel_texts(a, b, False)
 
+    print(res)
     stats = get_stats(res[0])
     print(stats)
     print(json.dumps(stats, indent=4, ensure_ascii=False))
-
-    """
     a = "A university has said it was recently launched new institute could put a Hampshire city at the forefront of the UK space industry. The Southampton Space Institute, which belongs to the University of Southampton, will support government plans to develop Britain's fast-growing space sector, worth £17bn every year. It brings together the expertise of world-renowned research groups and facilities to drive the development of new space technology and conversations around policy and space sustainability. Inaugural director Prof Matt Middleton said the university has taught thousands of students about aircraft and satellite design since 1959."
     b = "A univesity has said 'twas recently launch'd new institute cou'd put a Hampshire city at the forefront of the UK space industry. The Southampton Space Institute, whch belongs to the University of Southampton, will support government plans to develop Britains fast-growing space sector, worth £17bn every year. It brings together the expertise of world-renowned research groups and facilities to drive the development of new space technology and conversations around policy and space sustainability. Inaugural director Prof Matt Middleton sayd the university has taught thousands of students about aircraft and satellite design since 1959."
     res = align_parallel_texts(a, b)

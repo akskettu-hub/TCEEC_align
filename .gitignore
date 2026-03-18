@@ -3,3 +3,5 @@ data/F2FLEMIN.xml
 data/F2FLEMIN_c7_formatted.xml
 .venv/
 data/AR*
+output/
+data/
